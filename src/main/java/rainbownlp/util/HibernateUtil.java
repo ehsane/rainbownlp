@@ -194,4 +194,8 @@ public class HibernateUtil {
 		session.close();
 		return oneVal;
 	}
+	public static void initialize(String string) {
+		// TODO Auto-generated method stub
+		
+	}
 }

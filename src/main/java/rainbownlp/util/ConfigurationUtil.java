@@ -77,7 +77,11 @@ public class ConfigurationUtil {
 				getResourceAsStream(configurationFileName);//
 		//Configuration.class.getClassLoader().getResourceAsStream("/configuration.properties");
 		configFile.load(config_file);
-
+	}
+	public static void init(String configurationFileName, String hibernateConfigFile) throws IOException
+	{
+		init(configurationFileName);
+		HibernateUtil.initialize("hibernate-oss.cfg.xml");
 	}
 	public static String getValue(String key){
 		init();

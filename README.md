@@ -1,4 +1,4 @@
-rainbownlp
+RainbowNLP
 ==========
 
 RainbowNLP (RNLP) is a framework for various natural language processing tasks including: supervised name entity recognition and relationship extraction.
