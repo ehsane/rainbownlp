@@ -30,8 +30,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
-import cc.mallet.pipe.iterator.FileIterator;
-
 public class FileUtil {
 	public static final String DEBUG_FILE = "debug.log";
 	/**
@@ -41,10 +39,10 @@ public class FileUtil {
 	 */
 	public static boolean createFileIfNotExists(String path) {
 		boolean result = false;
-		File modelFile = new File(path);
-		if (!modelFile.exists()) {
+		File file = new File(path);
+		if (!file.exists()) {
 			try {
-				result = modelFile.createNewFile();
+				result = file.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -141,9 +139,9 @@ public class FileUtil {
 	 */
 	public static boolean createFolderIfNotExists(String path) {
 		boolean result = false;
-		File modelFolder = new File(path);
-		if (!modelFolder.exists() || !modelFolder.isDirectory()) {
-			result = modelFolder.mkdirs();
+		File folder = new File(path);
+		if (!folder.exists() || !folder.isDirectory()) {
+			result = folder.mkdirs();
 		}
 
 		return result;
@@ -152,15 +150,15 @@ public class FileUtil {
 	public static String deleteAndCreateFolder(String path) throws IOException {
 		
 		boolean success_del;
-		File modelFolder = new File(path);
-		success_del = deleteDirectory(modelFolder);
+		File folder = new File(path);
+		success_del = deleteDirectory(folder);
 		if (!success_del) {
 		    // Deletion failed
 			throw new IOException();
 		}
-		File new_modelFolder = new File(path);
+		File newFolder = new File(path);
 
-		if (new_modelFolder.mkdir()==true)
+		if (newFolder.mkdir()==true)
 		{
 			return path;
 		}
@@ -291,8 +289,8 @@ public class FileUtil {
 
 
 	public static boolean fileExists(String path) {
-		File modelFile = new File(path);
-		return modelFile.exists();
+		File file = new File(path);
+		return file.exists();
 	}
 	public static String getFilePathInDirectory(String directory, String fileName)
 	{
