@@ -9,7 +9,6 @@ import java.util.List;
 import rainbownlp.core.Artifact;
 import rainbownlp.util.FileUtil;
 import rainbownlp.util.HibernateUtil;
-import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.process.PTBTokenizer;
 
 public class SimpleDocumentLoader implements IDocumentAnalyzer {

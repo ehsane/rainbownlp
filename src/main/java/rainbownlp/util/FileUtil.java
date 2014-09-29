@@ -251,11 +251,12 @@ public class FileUtil {
         
         return fileNames;
 	}
-
 	public static List<String> loadLineByLine(String file_path) {
+		return loadLineByLine(new File(file_path));
+	}
+	public static List<String> loadLineByLine(File f) {
 		List<String> lines = new ArrayList<String>();
 		try {
-			File f = new File(file_path);
 			if(!f.exists()) return lines;
 			BufferedReader br1 = new BufferedReader(
 					new FileReader(f));

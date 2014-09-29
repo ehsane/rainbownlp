@@ -64,7 +64,7 @@ public class PhraseLink {
 	}
 	
 	
-	protected static PhraseLink createInstance(Phrase pfromPhrase, Phrase pToPhrase){
+	public static PhraseLink createInstance(Phrase pfromPhrase, Phrase pToPhrase){
 	    
 		PhraseLink phraseLink_obj;
 	   
