@@ -11,7 +11,7 @@ import rainbownlp.util.FileUtil;
 import rainbownlp.util.HibernateUtil;
 import edu.stanford.nlp.process.PTBTokenizer;
 
-public class SimpleDocumentLoader implements IDocumentAnalyzer {
+public class SimpleDocumentLoader extends DocumentAnalyzer {
 	protected List<Artifact> documents;
 	protected String documentExtension = "txt";
 	public List<Artifact> getDocuments() {
@@ -57,6 +57,7 @@ public class SimpleDocumentLoader implements IDocumentAnalyzer {
 			new_sentence.setParentArtifact(parentArtifact);
 			new_sentence.setLineIndex(curSentenceIndex+1);
 			new_sentence.setContent(tokenizedSentence);
+			new_sentence.setArtifactOptionalCategory(dsType.name());
 			if (previous_sentence != null) {
 				new_sentence.setPreviousArtifact(previous_sentence);
 				previous_sentence.setNextArtifact(new_sentence);
@@ -96,7 +97,7 @@ public class SimpleDocumentLoader implements IDocumentAnalyzer {
 			new_word.setParentArtifact(parentSentence);
 			new_word.setLineIndex(parentOffset+1);
 			new_word.setWordIndex(curTokenIndex);
-
+			new_word.setArtifactOptionalCategory(dsType.name());
 			if (previous_word != null) {
 				new_word.setPreviousArtifact(previous_word);
 				previous_word.setNextArtifact(new_word);
@@ -123,6 +124,8 @@ public class SimpleDocumentLoader implements IDocumentAnalyzer {
 			//Util.generateParseFilesIfnotExist(filesRoot);
 
 			Artifact new_doc = Artifact.getInstance(Artifact.Type.Document, rootPath, 0);
+			new_doc.setArtifactOptionalCategory(dsType.name());
+			HibernateUtil.save(new_doc);
 			try {
 				processDocument(new_doc);
 			} catch (Exception e) {
@@ -138,7 +141,9 @@ public class SimpleDocumentLoader implements IDocumentAnalyzer {
 			for(File file : files) {
 				Artifact new_doc = 
 						Artifact.getInstance(Artifact.Type.Document, file.getAbsolutePath(), 0);
-
+				new_doc.setArtifactOptionalCategory(dsType.name());
+				HibernateUtil.save(new_doc);
+				
 				loaded_documents.add(new_doc);
 			}
 
