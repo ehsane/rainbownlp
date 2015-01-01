@@ -30,6 +30,9 @@ create a new document loader by implementing "IDocumentAnalyzer" interface (for 
 
 6. evaluate model using test examples.
 
+This is an example of temporal relationship extraction implementation used for I2B2 shared task submission (https://www.i2b2.org/NLP/TemporalRelations/) :
+https://github.com/ehsane/temporal-relation.git
+
 
 How to cite in your publication?
 ==========
