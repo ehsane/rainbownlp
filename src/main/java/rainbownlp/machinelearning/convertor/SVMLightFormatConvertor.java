@@ -41,7 +41,7 @@ public class SVMLightFormatConvertor {
 				continue;
 			}
 
-			Double expectedClass = example.getExpectedClass()+1; //convert to 1-base (e.g. 0 -> 1)
+			Double expectedClass = example.getNumericExpectedClass()+1; //convert to 1-base (e.g. 0 -> 1)
 			FileUtil.logLine(null, "expected class: "+expectedClass);
 
 			SVMLightFormatLine = expectedClass + " "
@@ -105,7 +105,7 @@ public class SVMLightFormatConvertor {
 				FileUtil.logLine(FileUtil.DEBUG_FILE, "expected class is null!");
 				continue;
 			}
-			Double expectedClass = example.getExpectedClass()+1; //convert to 1-base (e.g. 0 -> 1)
+			Double expectedClass = example.getNumericExpectedClass()+1; //convert to 1-base (e.g. 0 -> 1)
 			FileUtil.logLine(FileUtil.DEBUG_FILE, "expected class: "+expectedClass);
 
 			if(ConfigurationUtil.TrainingMode &&

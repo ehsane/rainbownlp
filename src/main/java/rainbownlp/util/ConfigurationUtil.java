@@ -54,17 +54,18 @@ public class ConfigurationUtil {
 							getResourceAsStream("configuration.conf");//
 					//Configuration.class.getClassLoader().getResourceAsStream("/configuration.properties");
 				rnlpConfigFile.load(config_file);
-			} catch (IOException e) {
+				
+				configFile.putAll(rnlpConfigFile);
+				
+				MinInstancePerLeaf = Integer.parseInt(configFile.getProperty("MinInstancePerLeaf"));
+				SVMCostParameter = Double.parseDouble(configFile.getProperty("SVMCostParameter"));
+				SVMPolyCParameter = Double.parseDouble(configFile.getProperty("SVMPolyCParameter"));
+				ReleaseMode = Boolean.parseBoolean(configFile.getProperty("ReleaseMode"));
+				SVMKernel = SVMKernels.values()[Integer.parseInt(configFile.getProperty("SVMKernel"))];
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			configFile.putAll(rnlpConfigFile);
-			
-			MinInstancePerLeaf = Integer.parseInt(configFile.getProperty("MinInstancePerLeaf"));
-			SVMCostParameter = Double.parseDouble(configFile.getProperty("SVMCostParameter"));
-			SVMPolyCParameter = Double.parseDouble(configFile.getProperty("SVMPolyCParameter"));
-			ReleaseMode = Boolean.parseBoolean(configFile.getProperty("ReleaseMode"));
-			SVMKernel = SVMKernels.values()[Integer.parseInt(configFile.getProperty("SVMKernel"))];
 		}
 	}
 	
@@ -89,7 +90,9 @@ public class ConfigurationUtil {
 	}
 
 	public static int getValueInteger(String key) {
-		int result = Integer.parseInt(getValue(key));
+		String val = getValue(key);
+		if(val==null) return 0;
+		int result = Integer.parseInt(val);
 		return result;
 	}
 

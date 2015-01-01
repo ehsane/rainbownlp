@@ -139,6 +139,32 @@ public class MLExampleFeature {
 		
 		session.close();
 	}
+	
+	/*
+	 * delete all attribute name for an specific artifact
+	 */
+	public static void deleteExampleFeatures(MLExample pExample) {
+		String hql = "from MLExampleFeature as af inner join fetch af.featureValuePair " +
+				"where af.relatedExample = " +
+				pExample.getExampleId();
+		
+		Session session = HibernateUtil.sessionFactory.openSession();
+		
+		List<MLExampleFeature> artifact_feature_list = 
+			(List<MLExampleFeature>) HibernateUtil.executeReader(hql, null,null, session);
+		
+		if(artifact_feature_list.size()>0)
+		{
+			String example_feature_ids = "";
+			for(MLExampleFeature af : artifact_feature_list)
+				example_feature_ids=example_feature_ids.concat(af.getExampleFeatureId()+",");
+			example_feature_ids = example_feature_ids.replaceAll(",$", "");
+			HibernateUtil.executeNonReader("delete from MLExampleFeature where exampleFeatureId in ("+
+					example_feature_ids+")");
+		}
+		
+		session.close();
+	}
 
 	@Override public String toString()
 	{

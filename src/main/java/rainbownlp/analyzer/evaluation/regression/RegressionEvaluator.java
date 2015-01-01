@@ -21,8 +21,8 @@ public class RegressionEvaluator {
 		
 		for(MLExample example : pExamplesToTest)
 		{
-			Double expected = example.getExpectedClass();
-			Double predicted = example.getPredictedClass();
+			Double expected = example.getNumericExpectedClass();
+			Double predicted = example.getNumericPredictedClass();
 			er.add(expected, predicted);
 		}
 		

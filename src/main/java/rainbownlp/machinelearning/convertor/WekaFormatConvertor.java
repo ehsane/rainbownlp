@@ -63,7 +63,7 @@ public class WekaFormatConvertor {
 	    		FileUtil.logLine(FileUtil.DEBUG_FILE, "expected class is null!");
 	    		continue;
 	    	}
-	    	Double expectedClass = example.getExpectedClass()+1;
+	    	Double expectedClass = example.getNumericExpectedClass()+1;
 	    	// create instance
 	    	double[] vals = new double[fvps.size()+1];
     		List<MLExampleFeature> features = example.getExampleFeatures();

@@ -7,7 +7,7 @@ import rainbownlp.util.StringUtil;
 
 
 public abstract class LearnerEngine {
-	String modelFile;
+	public String modelFile;
 	String taskName = "unknown";
 	String trainFile;
 	String testFile;
@@ -16,6 +16,7 @@ public abstract class LearnerEngine {
 	public abstract void test(List<MLExample> pTestExamples) throws Exception ;
 	
 	protected String getModelFilePath(){
+		if(modelFile!=null) return modelFile;
 		if(!StringUtil.isEmpty(trainFile))
 			modelFile = trainFile.replace("."+SVMLightFormatConvertor.OUTPUT_FILE_EXTENSION, ".model");
 		else

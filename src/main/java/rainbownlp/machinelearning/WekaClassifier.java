@@ -85,9 +85,9 @@ public class WekaClassifier extends LearnerEngine {
 		System.out.println(pTestExamples.size() +"=="+ testData.numInstances());
 		int counter = 0;
 		while (counter<pTestExamples.size() && counter<testData.numInstances()) {
-			double clsLabel = wekaAlgorithm.classifyInstance(testData.instance(counter));
+			Double clsLabel = wekaAlgorithm.classifyInstance(testData.instance(counter));
 			   
-			pTestExamples.get(counter).setPredictedClass(clsLabel);
+			pTestExamples.get(counter).setPredictedClass(clsLabel.toString());
 			MLExample test = pTestExamples.get(counter);
 			String savePredictedQuery = "update MLExample set predictedClass ="+test.getPredictedClass()+
 					" where exampleId="+test.getExampleId();

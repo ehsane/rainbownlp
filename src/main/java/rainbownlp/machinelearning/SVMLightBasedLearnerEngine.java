@@ -52,7 +52,7 @@ public abstract class SVMLightBasedLearnerEngine extends LearnerEngine {
 			
 		exampleids = exampleids.replaceFirst(",", "");
 		String resetQuery = "update MLExample set predictedClass = -1 where exampleId in ("+ exampleids +")";
-		HibernateUtil.executeNonReader(resetQuery);
+		HibernateUtil.executeNonReader(resetQuery, true);
 					
 		String resultFile = modelFile+"_result.txt";
 		
@@ -90,7 +90,7 @@ public abstract class SVMLightBasedLearnerEngine extends LearnerEngine {
 					weight = Double.parseDouble(lineParts[classNum.intValue()]);
 			}
 			
-			pTestExamples.get(counter).setPredictedClass(classNum);
+			pTestExamples.get(counter).setPredictedClass(classNum.toString());
 			pTestExamples.get(counter).setPredictionWeight(weight);
 			
 			MLExample test = pTestExamples.get(counter);

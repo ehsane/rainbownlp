@@ -1,5 +1,6 @@
 package rainbownlp.core;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Index;
 
@@ -28,7 +30,7 @@ import rainbownlp.util.HibernateUtil;
 @Entity
 @Table( name = "Phrase" )
 @Inheritance(strategy=InheritanceType.JOINED)
-public class Phrase {
+public class Phrase implements Serializable  {
 	private String phraseContent;
 	
 	private Artifact startArtifact;

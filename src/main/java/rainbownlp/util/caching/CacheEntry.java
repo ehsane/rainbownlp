@@ -40,7 +40,7 @@ public class CacheEntry {
 	 * @param pArtifactID
 	 * @return
 	 */
-	public static CacheEntry getInstance(String pKey) {
+	synchronized public static CacheEntry getInstance(String pKey) {
 		CacheEntry entry = get(pKey);
 	    if(entry == null)
 	    {
@@ -50,25 +50,26 @@ public class CacheEntry {
 	    }
 		return entry;
 	}
+	synchronized public static CacheEntry createInstance(String pKey, String value) {
+		CacheEntry entry = get(pKey);
+	    if(entry == null)
+	    {
+	    	entry = new CacheEntry();
+	    	entry.setKeyValue(pKey);
+	    	entry.setValue(value);
+	    	HibernateUtil.saveWithNewSession(entry);
+	    }
+		return entry;
+	}
 	
-	
-	public static CacheEntry get(String pKey){
+	synchronized public static CacheEntry get(String pKey){
 		String hql = "from CacheEntry where keyValue = :key";
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("key", pKey);
-		
-		
-		List<CacheEntry> entries = 
-				(List<CacheEntry>) HibernateUtil.executeReader(hql,params);
 	    
-	    
-		CacheEntry entry=null;
-	    if(entries.size()!=0)
-	    {
-	    	entry = 
-				entries.get(0);
-	    }
-	    return entry;
+		CacheEntry entry=(CacheEntry)HibernateUtil.executeGetOneValue(hql,params);;
+
+		return entry;
 	}
 }

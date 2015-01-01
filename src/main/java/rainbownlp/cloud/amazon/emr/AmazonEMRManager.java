@@ -1,6 +1,8 @@
 package rainbownlp.cloud.amazon.emr;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
@@ -13,7 +15,7 @@ import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 import com.amazonaws.services.elasticmapreduce.util.StepFactory;
 
 public class AmazonEMRManager {
-	public void runOnEMR(){
+	public void runOnEMR(List<HadoopJarStepConfig> steps){
 		AWSCredentials credentials = null;
 		try {
 			credentials = new PropertiesCredentials(
@@ -26,19 +28,16 @@ public class AmazonEMRManager {
 
 		AmazonElasticMapReduce client = new AmazonElasticMapReduceClient(credentials);
 
-		// predefined steps. See StepFactory for list of predefined steps
-//		StepConfig hive = new StepConfig("Hive", new StepFactory().newInstallHiveStep());
-		
-		// A custom step
-		HadoopJarStepConfig hadoopConfig1 = new HadoopJarStepConfig()
-			.withJar("s3://mybucket/my-jar-location1")
-			.withMainClass("com.my.Main1") // optional main class, this can be omitted if jar above has a manifest
-			.withArgs("--verbose"); // optional list of arguments
-		StepConfig customStep = new StepConfig("Step1", hadoopConfig1);
+		List<StepConfig> stepsConfig = new ArrayList<StepConfig>();
+		int counter = 0;
+		for(HadoopJarStepConfig step : steps){
+			counter++;
+			stepsConfig.add(new StepConfig("Step"+counter, step));
+		}
 
 		AddJobFlowStepsResult result = client.addJobFlowSteps(new AddJobFlowStepsRequest()
 			.withJobFlowId("j-1HTE8WKS7SODR")
-			.withSteps(customStep));
+			.withSteps(stepsConfig));
 		System.out.println(result.getStepIds());
 	}
 }

@@ -7,9 +7,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateUtil {
 	//private static SessionFactory sessionFactory;
@@ -20,12 +20,16 @@ public class HibernateUtil {
 	public static String hibernateConfigFile = "hibernate.cfg.xml";
 	static Session saverSession;
 	static{
-		initialize();
+//		initialize();
 	}
 	public static void initialize(){
 		sessionFactory = configureSessionFactory();
 		loaderSession = sessionFactory.openSession();
 		saverSession = sessionFactory.openSession();
+	}
+	public static void initialize(String pConfigFile) {
+		hibernateConfigFile = pConfigFile;
+		initialize();
 	}
 	static boolean inTransaction = false;
 	
@@ -33,26 +37,41 @@ public class HibernateUtil {
 	private static SessionFactory configureSessionFactory() throws HibernateException {
 	    Configuration configuration = new Configuration();
 	    configuration.configure(hibernateConfigFile);
-	    serviceRegistry = new ServiceRegistryBuilder().applySettings(
-	    		configuration.getProperties()).getBootstrapServiceRegistry();        
+	    serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
+	    		configuration.getProperties()).build();        
 	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 	    loaderSession = sessionFactory.openSession();
 		saverSession = sessionFactory.openSession();
-	    return sessionFactory;
+		
+		return sessionFactory;
 	}
 	/**
 	 * save object status
 	 */
 	public static synchronized void save(Object _object, Session session) {
-		session.beginTransaction();
-		session.saveOrUpdate(_object);
-		session.flush();
-		session.getTransaction().commit();
+		try {
+			session.getTransaction().begin();
+			session.saveOrUpdate(_object);
+			session.flush();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		}
 	}
 	public static void save(Object _object) {
 		save(_object, loaderSession);
 	}
-	
+	/**
+	 * Save the object with a newly created session. Object created by this method is not modifiable since the session pointer will be lost.
+	 * @param _object
+	 */
+	public static void saveWithNewSession(Object _object) {
+		Session session = sessionFactory.openSession();
+		save(_object, session);
+		session.clear();
+		session.close();
+	}
 	public static List<?> executeReader(String hql)
 	{
 		return executeReader(hql, null, null, loaderSession);
@@ -67,35 +86,42 @@ public class HibernateUtil {
 	{
 		return executeReader(hql, params, limit, loaderSession);
 	}
-	public static List<?> executeReader(String hql, HashMap<String, Object> params, Integer limit, Session session)
+	synchronized public static List<?> executeReader(String hql, HashMap<String, Object> params, Integer limit, Session session)
 	{
-		Query q = session.createQuery(hql);
-		
-		if(params!=null)
-			for(String key :params.keySet())
-			{
-				Object val = params.get(key);
-				if(val instanceof String)
-					q.setString(key, (String)val);
-				else if(val!=null)
-					q.setInteger(key, (Integer)val);
-			}
-		if(limit!=null)
-			q.setMaxResults(limit);
-		
-		List<?> result_list = 
-			q.list();
-		
-		return result_list;
+		try {
+			session.getTransaction().begin();
+			Query q = session.createQuery(hql);
+			
+			if(params!=null)
+				for(String key :params.keySet())
+				{
+					Object val = params.get(key);
+					if(val instanceof String)
+						q.setString(key, (String)val);
+					else if(val!=null)
+						q.setInteger(key, (Integer)val);
+				}
+			if(limit!=null)
+				q.setMaxResults(limit);
+			
+			List<?> result_list = 
+				q.list();
+			session.getTransaction().commit();
+			return result_list;
+		} catch (Exception e) {
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	
 	
-	public static void executeNonReader(String hql, HashMap<String, Object> params)
+	synchronized public static void executeNonReader(String hql, HashMap<String, Object> params)
 	{
 		if(!inTransaction)
 		{
-//			session = sessionFactory.openSession();
+			saverSession = sessionFactory.openSession();
 			saverSession.beginTransaction();
 		}
 		
@@ -113,7 +139,7 @@ public class HibernateUtil {
 		{
 			saverSession.flush();
 			saverSession.getTransaction().commit();
-//			session.close();
+			saverSession.close();
 			
 		}
 	}
@@ -136,10 +162,7 @@ public class HibernateUtil {
 
 	
 	
-	public static Object getHibernateTemplate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	public static void executeNonReader(String hql) {
 		executeNonReader(hql, null);
 		
@@ -182,20 +205,21 @@ public class HibernateUtil {
 	public static Object executeGetOneValue(String sql,
 			HashMap<String, Object> params) {
 		Session session = sessionFactory.openSession();
-		Query query = session.createSQLQuery(sql);
+		Query query = session.createQuery(sql);
 		if (params!=null)
 			for(String key :params.keySet())
 			{
 				Object val = params.get(key);
 				query.setParameter(key, val);
 			}
-		Object oneVal = query.uniqueResult();
+		List<?> result_list = 
+				query.list();
 		session.clear();
 		session.close();
+		if(result_list.size()==0) return null;
+		
+		Object oneVal = result_list.get(0);
 		return oneVal;
 	}
-	public static void initialize(String string) {
-		// TODO Auto-generated method stub
-		
-	}
+
 }

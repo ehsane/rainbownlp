@@ -357,7 +357,7 @@ public class FeatureValuePair {
 	}
 	public static int getMinIndexForAttribute(String attributeName) {
 		String hql = "select min(tempFeatureIndex) from FeatureValuePair where " +
-				"featureName='" + attributeName + "'";
+				"featureName='" + attributeName + "' and tempFeatureIndex>-1";
 		List res = HibernateUtil.executeReader(hql);
 		return (res.get(0)==null)?0:Integer.valueOf(res.get(0).toString());
 	}

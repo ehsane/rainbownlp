@@ -47,16 +47,16 @@ public class InSentenceExampleBuilder {
 					Phrase p2 = phrases.get(j);
 					PhraseLink phrase_link = 
 							PhraseLink.getInstance(p1, p2);
-					int expected_class = phrase_link.getLinkType().ordinal();
+					Integer expected_class = phrase_link.getLinkType().ordinal();
 
 					ConfigurationUtil.SaveInGetInstance = false;
 
 					MLExample link_example = 
 							MLExample.getInstanceForLink(phrase_link, experimentGroup);
-					link_example.setExpectedClass((double) expected_class);
+					link_example.setExpectedClass(expected_class);
 					link_example.setRelatedPhraseLink(phrase_link);
 
-					link_example.setPredictedClass((double) -1);
+					link_example.setPredictedClass(-1);
 
 
 					if(sentence.getAssociatedFilePath().contains("/train/"))

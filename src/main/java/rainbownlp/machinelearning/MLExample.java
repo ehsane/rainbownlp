@@ -1,5 +1,6 @@
 package rainbownlp.machinelearning;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +34,12 @@ import rainbownlp.util.ConfigurationUtil;
 
 @Entity
 @Table( name = "MLExample" )
-public class MLExample {
+public class MLExample  implements Serializable {
 	int exampleId;
 
 
-	Double predictedClass;
-	Double expectedClass;
+	String predictedClass;
+	String expectedClass;
 	boolean forTrain;
 	String corpusName;
 	String predictionEngine;
@@ -143,24 +144,24 @@ public class MLExample {
 		forTrain = isForTrain;
 	}
 	
-	public Double getPredictedClass() {
+	public String getPredictedClass() {
 		return predictedClass;
 	}
 	
-	public void setPredictedClass(Double pPredictedClass) {
+	public void setPredictedClass(String pPredictedClass) {
 		predictedClass = pPredictedClass;
 	}
 	
-	public Double getExpectedClass() {
+	public String getExpectedClass() {
 		return expectedClass;
 	}
-	public void setPredictedClass(int pPredictedClass) {
-		setPredictedClass((double) pPredictedClass);
+	public void setPredictedClass(Integer pPredictedClass) {
+		setPredictedClass(pPredictedClass.toString());
 	}	
-	public void setExpectedClass(int pExpectedClass) {
-		setExpectedClass((double) pExpectedClass);
+	public void setExpectedClass(Integer pExpectedClass) {
+		setExpectedClass(pExpectedClass.toString());
 	}	
-	public void setExpectedClass(Double pExpectedClass) {
+	public void setExpectedClass(String pExpectedClass) {
 		expectedClass = pExpectedClass;
 	}
 	@Id
@@ -732,5 +733,15 @@ public class MLExample {
 		String hql = "from MLExample where associatedFilePath like '%"+
 				pathLike+"%' order by exampleId";
 		return getExamplesList(hql);
+	}
+
+	@Transient
+	public Double getNumericExpectedClass() {
+		return Double.parseDouble(expectedClass);
+	}
+
+	@Transient
+	public Double getNumericPredictedClass() {
+		return Double.parseDouble(predictedClass);
 	}
 }
