@@ -42,7 +42,7 @@ Emadzadeh, E.; Jonnalagadda, S.; Gonzalez, G., "Evaluating Distributional Semant
 
 Question/Comments
 ==========
-Feel free to contact us with you question/comments:
+Feel free to contact us with your question/comments:
 Ehsan Emadzadeh (eemadzadeh (at) gmail.com)
 Azadeh Nikfarjam (azadeh.nikfarjam (at) gmail.com)
   
